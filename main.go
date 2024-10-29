@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
 
+	"github.com/Le0nar/bestiary/internal/handler"
 	"github.com/Le0nar/bestiary/internal/repository"
+	"github.com/Le0nar/bestiary/internal/service"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 )
@@ -21,5 +23,11 @@ func main() {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
 	}
 
-	fmt.Printf("db: %v\n", db)
+	
+	repo := repository.NewRepository(db)
+	service := service.NewService(repo)
+	handler := handler.NewHandler(service)
+
+	router := handler.InitRouter()
+	http.ListenAndServe(":3000", router)
 }
