@@ -1,10 +1,15 @@
 package service
 
-import "github.com/Le0nar/bestiary/internal/npc"
+import (
+	"github.com/Le0nar/bestiary/internal/enemy"
+	"github.com/Le0nar/bestiary/internal/npc"
+)
 
 type repository interface {
 	CreateNpc(dto npc.CreateNpcDto) error
 	GetNpcList() ([]npc.Npc, error)
+
+	CreateEnemy(dto enemy.CreateEnemyDto) error
 }
 
 type Service struct {
@@ -21,4 +26,8 @@ func (s *Service) CreateNpc(dto npc.CreateNpcDto) error {
 
 func (s *Service) GetNpcList() ([]npc.Npc, error)  {
 	return s.repository.GetNpcList()
+}
+
+func (s *Service) CreateEnemy(dto enemy.CreateEnemyDto) error  {
+	return s.repository.CreateEnemy(dto)
 }

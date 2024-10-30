@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 
+	"github.com/Le0nar/bestiary/internal/enemy"
 	"github.com/Le0nar/bestiary/internal/npc"
 	"github.com/jmoiron/sqlx"
 )
@@ -41,4 +42,45 @@ func (r *Repository) GetNpcList() ([]npc.Npc, error) {
 	)
 
 	return npcList, err
+}
+
+// Current transacation is overhead
+func (r *Repository) CreateEnemy(dto enemy.CreateEnemyDto) error  {
+	// 1) get index for attack type
+	var attackTypeIndex int
+	query := fmt.Sprintf("SELECT id FROM %s where name = '%s'", attackTypeTable, dto.AttackType)
+	err := r.db.Get(&attackTypeIndex, query)
+
+	if err != nil {
+		return err
+	}
+
+	// 2) start transaction
+	tx, err := r.db.Begin()
+
+	// Defer a rollback in case anything fails.
+	defer tx.Rollback()
+
+	if err != nil {
+		return err
+	}
+
+	// 3) set data to enemy
+	query = fmt.Sprintf(
+		"INSERT INTO %s (name, description, hp, attack_type, damage, haste) values ($1, $2, $3, $4, $5, $6)",
+		 enemyTable,
+	)
+
+	_, err = tx.Exec(query, dto.Name, dto.Description, dto.HP, attackTypeIndex, dto.Damage, dto.Haste)
+	if err != nil {
+		return err
+	}
+
+	// 4) commit transaction
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
