@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/Le0nar/bestiary/internal/creature"
 	"github.com/Le0nar/bestiary/internal/enemy"
 	"github.com/Le0nar/bestiary/internal/npc"
 	"github.com/go-chi/chi"
@@ -17,8 +18,7 @@ type service interface{
 	CreateEnemy(dto enemy.CreateEnemyDto) error
 	GetEnemyList() ([]enemy.EnemyDto, error)
 
-	// CreatureFields: Name, Description, HP
-	// GetAllCreature()([]creature.Creature, error)
+	GetCreatureList()([]creature.Creature, error)
 }
 
 type Handler struct {
@@ -37,6 +37,8 @@ func (h *Handler) InitRouter() http.Handler {
 
 	router.Post("/enemy", h.CreateEnemy)
 	router.Get("/enemy", h.GetEnemyList)
+
+	router.Get("/creature", h.GetCreatureList)
 
 	return router
 }
@@ -95,4 +97,14 @@ func (h *Handler) GetEnemyList(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	render.JSON(w, r, enemyList)
+}
+
+func (h *Handler) GetCreatureList(w http.ResponseWriter, r *http.Request)  {
+	creature, err := h.service.GetCreatureList();
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	render.JSON(w, r, creature)
 }

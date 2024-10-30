@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 
+	"github.com/Le0nar/bestiary/internal/creature"
 	"github.com/Le0nar/bestiary/internal/enemy"
 	"github.com/Le0nar/bestiary/internal/npc"
 	"github.com/jmoiron/sqlx"
@@ -120,4 +121,21 @@ func (r *Repository) GetEnemyList() ([]enemy.EnemyDto, error) {
 	}
 
 	return enemyDtoList, err
+}
+
+func (r *Repository) GetCreatureList() ([]creature.Creature, error)  {
+	var creatureList []creature.Creature
+
+	query := fmt.Sprintf(
+		"SELECT name, description FROM %s 		UNION ALL		SELECT name, description from %s		ORDER BY name", 
+		npcTable,
+		enemyTable,
+	)
+
+	err := r.db.Select(
+		&creatureList,
+		query,
+	)
+
+	return creatureList, err
 }
