@@ -15,7 +15,7 @@ type service interface{
 	GetNpcList() ([]npc.Npc, error)
 
 	CreateEnemy(dto enemy.CreateEnemyDto) error
-	// GetEnemyList() ([]enemy.CreateEnemyDto, error)
+	GetEnemyList() ([]enemy.EnemyDto, error)
 
 	// CreatureFields: Name, Description, HP
 	// GetAllCreature()([]creature.Creature, error)
@@ -36,6 +36,7 @@ func (h *Handler) InitRouter() http.Handler {
 	router.Get("/npc", h.GetNpcList)
 
 	router.Post("/enemy", h.CreateEnemy)
+	router.Get("/enemy", h.GetEnemyList)
 
 	return router
 }
@@ -84,4 +85,14 @@ func (h *Handler) CreateEnemy(w http.ResponseWriter, r *http.Request)  {
 	}
 
 	render.JSON(w, r, "")
+}
+
+func (h *Handler) GetEnemyList(w http.ResponseWriter, r *http.Request)  {
+	enemyList, err := h.service.GetEnemyList();
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	render.JSON(w, r, enemyList)
 }

@@ -84,3 +84,40 @@ func (r *Repository) CreateEnemy(dto enemy.CreateEnemyDto) error  {
 
 	return nil
 }
+
+func (r *Repository) GetEnemyList() ([]enemy.EnemyDto, error) {
+	var enemyList []enemy.Enemy
+
+	query := fmt.Sprintf("SELECT * FROM %s", enemyTable)
+
+	err := r.db.Select(
+		&enemyList,
+		query,
+	)
+
+	var enemyDtoList []enemy.EnemyDto
+
+	for _, v  := range enemyList {
+		var attackTypeName string
+		query := fmt.Sprintf("SELECT name FROM %s where id = %d", attackTypeTable, v.AttackType)
+		err := r.db.Get(&attackTypeName, query)
+
+		if err != nil {
+			return enemyDtoList, err
+		}
+
+		var enemyDto enemy.EnemyDto
+		enemyDto.AttackType = attackTypeName
+		enemyDto.Damage = v.Damage
+		enemyDto.Description = v.Description
+		enemyDto.HP = v.HP
+		enemyDto.Haste = v.Haste
+		enemyDto.Id = v.Id
+		enemyDto.Name = v.Name
+
+		enemyDtoList = append(enemyDtoList, enemyDto)
+
+	}
+
+	return enemyDtoList, err
+}

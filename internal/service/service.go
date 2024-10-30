@@ -10,6 +10,7 @@ type repository interface {
 	GetNpcList() ([]npc.Npc, error)
 
 	CreateEnemy(dto enemy.CreateEnemyDto) error
+	GetEnemyList() ([]enemy.EnemyDto, error) 
 }
 
 type Service struct {
@@ -30,4 +31,8 @@ func (s *Service) GetNpcList() ([]npc.Npc, error)  {
 
 func (s *Service) CreateEnemy(dto enemy.CreateEnemyDto) error  {
 	return s.repository.CreateEnemy(dto)
+}
+
+func (s *Service) GetEnemyList() ([]enemy.EnemyDto, error)  {
+	return s.repository.GetEnemyList()
 }
