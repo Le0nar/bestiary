@@ -1,0 +1,105 @@
+info:
+  contact: {}
+  description: This is a sample server.
+  title: Swagger Bestiary API
+  version: "1.0"
+paths:
+  /creature:
+    get:
+      consumes:
+      - application/json
+      description: Get creature list
+      operationId: get-creature-list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        default:
+          description: ""
+      summary: Get creature list
+  /enemy:
+    get:
+      consumes:
+      - application/json
+      description: Get enemy list
+      operationId: get-enemy-list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        default:
+          description: ""
+      summary: Get enemy list
+    post:
+      consumes:
+      - application/json
+      description: create enemy
+      operationId: create-enemy
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        default:
+          description: ""
+      summary: Create enemy
+  /npc:
+    get:
+      consumes:
+      - application/json
+      description: Get npc list
+      operationId: get-npc-list
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        default:
+          description: ""
+      summary: Get npc list
+    post:
+      consumes:
+      - application/json
+      description: create npc
+      operationId: create-npc
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        default:
+          description: ""
+      summary: Create npc
+swagger: "2.0"

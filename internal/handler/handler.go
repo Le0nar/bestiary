@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/Le0nar/bestiary/internal/creature"
@@ -9,6 +10,7 @@ import (
 	"github.com/Le0nar/bestiary/internal/npc"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type service interface{
@@ -29,8 +31,13 @@ func NewHandler(s service) *Handler {
 	return &Handler{service: s}
 }
 
-func (h *Handler) InitRouter() http.Handler {
+func (h *Handler) InitRouter(port int) http.Handler {
 	router := chi.NewRouter()
+
+	swaggerUrl := fmt.Sprintf("http://localhost:%d/swagger/doc.json", port)
+	router.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL(swaggerUrl), //The url pointing to API definition
+	))
 
 	router.Post("/npc", h.CreateNpc)
 	router.Get("/npc", h.GetNpcList)
@@ -43,6 +50,16 @@ func (h *Handler) InitRouter() http.Handler {
 	return router
 }
 
+// @Summary Create npc
+// @Description create npc
+// @ID create-npc
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Failure 400,404
+// @Failure 500
+// @Failure default
+// @Router /npc [post]
 func (h *Handler) CreateNpc(w http.ResponseWriter, r *http.Request) {
 	var dto npc.CreateNpcDto
 
@@ -61,6 +78,16 @@ func (h *Handler) CreateNpc(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, "")
 }
 
+// @Summary Get npc list
+// @Description Get npc list
+// @ID get-npc-list
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Failure 400,404
+// @Failure 500
+// @Failure default
+// @Router /npc [get]
 func (h *Handler) GetNpcList(w http.ResponseWriter, r *http.Request)  {
 	npcList, err := h.service.GetNpcList();
 	if err != nil {
@@ -71,6 +98,16 @@ func (h *Handler) GetNpcList(w http.ResponseWriter, r *http.Request)  {
 	render.JSON(w, r, npcList)
 }
 
+// @Summary Create enemy
+// @Description create enemy
+// @ID create-enemy
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Failure 400,404
+// @Failure 500
+// @Failure default
+// @Router /enemy [post]
 func (h *Handler) CreateEnemy(w http.ResponseWriter, r *http.Request)  {
 	var dto enemy.CreateEnemyDto
 
@@ -89,6 +126,16 @@ func (h *Handler) CreateEnemy(w http.ResponseWriter, r *http.Request)  {
 	render.JSON(w, r, "")
 }
 
+// @Summary Get enemy list
+// @Description Get enemy list
+// @ID get-enemy-list
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Failure 400,404
+// @Failure 500
+// @Failure default
+// @Router /enemy [get]
 func (h *Handler) GetEnemyList(w http.ResponseWriter, r *http.Request)  {
 	enemyList, err := h.service.GetEnemyList();
 	if err != nil {
@@ -99,6 +146,16 @@ func (h *Handler) GetEnemyList(w http.ResponseWriter, r *http.Request)  {
 	render.JSON(w, r, enemyList)
 }
 
+// @Summary Get creature list
+// @Description Get creature list
+// @ID get-creature-list
+// @Accept  json
+// @Produce  json
+// @Success 200
+// @Failure 400,404
+// @Failure 500
+// @Failure default
+// @Router /creature [get]
 func (h *Handler) GetCreatureList(w http.ResponseWriter, r *http.Request)  {
 	creature, err := h.service.GetCreatureList();
 	if err != nil {

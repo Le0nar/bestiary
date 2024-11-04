@@ -1,3 +1,5 @@
+# Install and run app
+
 1. ### For run docker postgresql:
 
     Pull docker image of postgres docker pull postgres
@@ -26,3 +28,7 @@
 5. ### Run app
     - Run psql container  (if it dont run already)
     - Run golang app `go run main.go`
+
+# Swagger
+ - run app
+ - open http://localhost:3000/swagger/index.html
